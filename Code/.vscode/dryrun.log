@@ -1,0 +1,13 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory `/Users/Scrooge/Code/GitHub/GBATetris/Code'
+[ -d build ] || mkdir -p build
+/Applications/Xcode.app/Contents/Developer/usr/bin/make BUILDDIR=`cd build && pwd` --no-print-directory -C build -f /Users/Scrooge/Code/GitHub/GBATetris/Code/Makefile
+echo main.c
+arm-none-eabi-gcc -MMD -MP -MF /Users/Scrooge/Code/GitHub/GBATetris/Code/build/main.d -g -Wall -O3 -mcpu=arm7tdmi -mtune=arm7tdmi -fomit-frame-pointer -ffast-math -mthumb -mthumb-interwork -iquote /Users/Scrooge/Code/GitHub/GBATetris/Code/include -iquote /Users/Scrooge/Code/GitHub/GBATetris/Code/resources -I/opt/devkitpro/libgba/include -I/Users/Scrooge/Code/GitHub/GBATetris/Code/build -c /Users/Scrooge/Code/GitHub/GBATetris/Code/source/main.c -o main.o 
+echo linking cartridge
+arm-none-eabi-gcc  -g -mthumb -mthumb-interwork -Wl,-Map,game.map -specs=gba.specs   main.o  -L/opt/devkitpro/libgba/lib -lmm -lgba -o /Users/Scrooge/Code/GitHub/GBATetris/Code/rom/game.elf
+arm-none-eabi-objcopy -O binary /Users/Scrooge/Code/GitHub/GBATetris/Code/rom/game.elf /Users/Scrooge/Code/GitHub/GBATetris/Code/rom/game.gba
+echo built ... game.gba
+gbafix /Users/Scrooge/Code/GitHub/GBATetris/Code/rom/game.gba
+make: Leaving directory `/Users/Scrooge/Code/GitHub/GBATetris/Code'
+ 

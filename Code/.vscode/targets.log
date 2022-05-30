@@ -1,0 +1,493 @@
+make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+# GNU Make 3.81
+# Copyright (C) 2006  Free Software Foundation, Inc.
+# This is free software; see the source for copying conditions.
+# There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE.
+
+# This program built for i386-apple-darwin11.3.0
+ 
+make: *** No rule to make target `all'.  Stop.
+
+
+# Make data base, printed on Mon May 30 23:17:27 2022
+
+# Variables
+
+# automatic
+<D = $(patsubst %/,%,$(dir $<))
+# makefile (from `/opt/devkitpro/devkitARM/gba_rules', line 9)
+LIBGBA := /opt/devkitpro/libgba
+# automatic
+?F = $(notdir $?)
+# makefile (from `/opt/devkitpro/devkitARM/base_tools', line 5)
+UNAME_R := 20.6.0
+# makefile (from `/opt/devkitpro/devkitARM/base_tools', line 44)
+SILENTCMD := @
+# environment
+VSCODE_LOG_NATIVE = false
+# makefile (from `Makefile', line 24)
+TARGET := game
+# automatic
+?D = $(patsubst %/,%,$(dir $?))
+# makefile (from `Makefile', line 27)
+INCLUDES := include resources
+# automatic
+@D = $(patsubst %/,%,$(dir $@))
+# automatic
+@F = $(notdir $@)
+# makefile
+CURDIR := /Users/Scrooge/Code/GitHub/GBATetris/Code
+# makefile (from `/opt/devkitpro/devkitARM/base_tools', line 8)
+SHELL = /bin/bash
+# makefile (from `/opt/devkitpro/devkitARM/base_tools', line 27)
+NM := arm-none-eabi-gcc-nm
+# environment
+VSCODE_NLS_CONFIG = {"locale":"en-gb","availableLanguages":{},"_languagePackSupport":true}
+# environment
+_ = /usr/bin/make
+# makefile (from `Makefile', line 56)
+CFLAGS := -g -Wall -O3 -mcpu=arm7tdmi -mtune=arm7tdmi -fomit-frame-pointer -ffast-math -mthumb -mthumb-interwork 
+# makefile (from `/opt/devkitpro/devkitARM/base_tools', line 1)
+MAKEFILE_LIST :=  Makefile /opt/devkitpro/devkitARM/gba_rules /opt/devkitpro/devkitARM/base_rules /opt/devkitpro/devkitARM/base_tools
+# makefile (from `Makefile', line 93)
+CPPFILES := $(subst ,,  )
+# makefile (from `/opt/devkitpro/devkitARM/base_tools', line 43)
+SILENTMSG := @echo
+# makefile (from `Makefile', line 26)
+SOURCES := asm source resources
+# makefile (from `Makefile', line 58)
+CXXFLAGS := -g -Wall -O3 -mcpu=arm7tdmi -mtune=arm7tdmi -fomit-frame-pointer -ffast-math -mthumb -mthumb-interwork  -fno-rtti -fno-exceptions
+# makefile (from `Makefile', line 128)
+LIBPATHS := -L/opt/devkitpro/libgba/lib
+# environment
+VSCODE_VERBOSE_LOGGING = true
+# makefile (from `/opt/devkitpro/devkitARM/base_tools', line 23)
+AS := arm-none-eabi-as
+# makefile (from `Makefile', line 92)
+CFILES :=  main.c 
+# environment
+__CFBundleIdentifier = com.microsoft.VSCode
+# makefile (from `Makefile', line 29)
+MUSIC := 
+# environment
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/x6/8txghxln3q541cs0c9s_1k3r0000gn/T/vscode-ipc-180b2976-2f4a-4fd0-acf8-3805e6a2e671.sock
+# environment
+VSCODE_CWD = /
+# makefile (from `/opt/devkitpro/devkitARM/base_tools', line 14)
+PATH := /opt/devkitpro/tools/bin:/opt/devkitpro/devkitARM/bin:/opt/devkitpro/tools/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/Applications/Little Snitch.app/Contents/Components:/opt/devkitpro/tools/bin:/Library/Apple/usr/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands
+# makefile (from `Makefile', line 107)
+LD := arm-none-eabi-gcc
+# makefile (from `Makefile', line 122)
+HFILES := 
+# makefile (from `Makefile', line 116)
+OFILES_BIN := 
+# default
+.INCLUDE_DIRS = /usr/local/include
+# makefile (from `Makefile', line 73)
+LIBDIRS := /opt/devkitpro/libgba
+# makefile (from `Makefile', line 86)
+VPATH := /Users/Scrooge/Code/GitHub/GBATetris/Code/asm /Users/Scrooge/Code/GitHub/GBATetris/Code/source /Users/Scrooge/Code/GitHub/GBATetris/Code/resources /Users/Scrooge/Code/GitHub/GBATetris/Code/data 
+# makefile (from `/opt/devkitpro/devkitARM/base_tools', line 24)
+AR := arm-none-eabi-gcc-ar
+# environment
+VSCODE_LOG_STACK = false
+# environment
+ELECTRON_RUN_AS_NODE = 1
+# makefile (from `Makefile', line 61)
+LDFLAGS = -g $(ARCH) -Wl,-Map,$(notdir $*.map)
+# default
+.FEATURES := target-specific order-only second-expansion else-if archives jobserver check-symlink
+# environment
+SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.UtuzjgquPo/Listeners
+# automatic
+%F = $(notdir $%)
+# makefile (from `/opt/devkitpro/devkitARM/base_tools', line 4)
+UNAME_S := Darwin
+# makefile (from `/opt/devkitpro/devkitARM/base_tools', line 13)
+DEVKITPATH = $(shell echo "$(DEVKITPRO)" | sed -e 's/^\([a-zA-Z]\):/\/\1/')
+# makefile (from `/opt/devkitpro/devkitARM/gba_rules', line 7)
+PORTLIBS := /opt/devkitpro/portlibs/gba /opt/devkitpro/portlibs/armv4
+# environment
+VSCODE_PIPE_LOGGING = true
+# environment
+PWD = /Users/Scrooge/Code/GitHub/GBATetris/Code
+# environment
+ORIGINAL_XDG_CURRENT_DESKTOP = undefined
+# environment
+VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
+ 
+# environment
+HOME = /Users/Scrooge
+# makefile (from `Makefile', line 90)
+DEPSDIR := /Users/Scrooge/Code/GitHub/GBATetris/Code/build
+# default
+MAKEFILEPATH := /Applications/Xcode.app/Contents/Developer/Makefiles
+# makefile (from `/opt/devkitpro/devkitARM/base_tools', line 30)
+ISVC = $(or $(VCBUILDHELPER_COMMAND),$(MSBUILDEXTENSIONSPATH32),$(MSBUILDEXTENSIONSPATH))
+# environment
+VSCODE_CODE_CACHE_PATH = /Users/Scrooge/Library/Application Support/Code/CachedData/c3511e6c69bb39013c4a4b7b9566ec1ca73fc4d5
+# environment
+LOGNAME = Scrooge
+# environment
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
+# makefile (from `/opt/devkitpro/devkitARM/base_tools', line 28)
+RANLIB := arm-none-eabi-gcc-ranlib
+# makefile (from `/opt/devkitpro/devkitARM/base_tools', line 19)
+PREFIX := arm-none-eabi-
+# environment
+VSCODE_HANDLES_UNCAUGHT_ERRORS = true
+# automatic
+^D = $(patsubst %/,%,$(dir $^))
+# makefile (from `/opt/devkitpro/devkitARM/base_tools', line 50)
+bin2o = 	bin2s -a 4 -H `(echo $(<F) | tr . _)`.h $< | $(AS) -o $(<F).o
+# environment
+DEVKITPRO = /opt/devkitpro
+# environment
+XPC_FLAGS = 0x0
+# default
+MAKE = $(MAKE_COMMAND)
+# default
+MAKECMDGOALS := all
+# environment
+DEVKITARM = /opt/devkitpro/devkitARM
+# environment
+SHLVL = 1
+# makefile (from `/opt/devkitpro/devkitARM/base_tools', line 21)
+CC := arm-none-eabi-gcc
+# makefile (from `Makefile', line 60)
+ASFLAGS := -g -mthumb -mthumb-interwork
+# default
+MAKE_VERSION := 3.81
+# environment
+USER = Scrooge
+# makefile
+.DEFAULT_GOAL := build
+# makefile (from `Makefile', line 124)
+INCLUDE := -iquote /Users/Scrooge/Code/GitHub/GBATetris/Code/include -iquote /Users/Scrooge/Code/GitHub/GBATetris/Code/resources -I/opt/devkitpro/libgba/include -I/Users/Scrooge/Code/GitHub/GBATetris/Code/build
+# makefile (from `Makefile', line 94)
+SFILES := $(subst ,,  )
+# automatic
+%D = $(patsubst %/,%,$(dir $%))
+# default
+MAKE_COMMAND := /Applications/Xcode.app/Contents/Developer/usr/bin/make
+# default
+.VARIABLES := 
+# environment
+TMPDIR = /var/folders/x6/8txghxln3q541cs0c9s_1k3r0000gn/T/
+# automatic
+*F = $(notdir $*)
+# environment
+VSCODE_IPC_HOOK = /Users/Scrooge/Library/Application Support/Code/1.67.2-main.sock
+# makefile (from `Makefile', line 48)
+ARCH := -mthumb -mthumb-interwork
+# makefile
+MAKEFLAGS = Rrqp
+# environment
+MFLAGS = -Rrqp
+# automatic
+*D = $(patsubst %/,%,$(dir $*))
+# makefile (from `/opt/devkitpro/devkitARM/base_rules', line 6)
+PORTLIBS_PATH := /opt/devkitpro/portlibs
+# environment
+XPC_SERVICE_NAME = application.com.microsoft.VSCode.19156048.19156054
+# automatic
++D = $(patsubst %/,%,$(dir $+))
+# makefile (from `Makefile', line 118)
+OFILES_SOURCES :=  main.o 
+# makefile (from `Makefile', line 28)
+DATA := data
+# automatic
++F = $(notdir $+)
+# makefile (from `/opt/devkitpro/devkitARM/base_tools', line 26)
+STRIP := arm-none-eabi-strip
+# makefile (from `Makefile', line 84)
+OUTPUT := /Users/Scrooge/Code/GitHub/GBATetris/Code/rom/game
+# environment
+__CF_USER_TEXT_ENCODING = 0x1F5:0x0:0x2
+# environment
+COMMAND_MODE = unix2003
+# default
+MAKEFILES := 
+# makefile (from `Makefile', line 25)
+BUILD := build
+# automatic
+<F = $(notdir $<)
+# makefile (from `/opt/devkitpro/devkitARM/base_tools', line 22)
+CXX := arm-none-eabi-g++
+# environment
+LC_ALL = C
+# makefile (from `Makefile', line 95)
+BINFILES := 
+# makefile (from `Makefile', line 66)
+LIBS := -lmm -lgba
+# automatic
+^F = $(notdir $^)
+# makefile (from `/opt/devkitpro/devkitARM/base_tools', line 25)
+OBJCOPY := arm-none-eabi-objcopy
+# default
+SUFFIXES := 
+# environment
+DEVKITPPC = /opt/devkitpro/devkitPPC
+# makefile (from `Makefile', line 120)
+OFILES :=   main.o 
+# environment
+MAKELEVEL := 0
+# environment
+LANG = C
+# environment
+VSCODE_PID = 740
+# variable set hash-table stats:
+ 
+# Load=111/1024=11%, Rehash=0, Collisions=16/223=7%
+
+# Pattern-specific Variable Values
+
+# No pattern-specific variable values.
+
+# Directories
+
+# source (device 16777221, inode 19163491): 3 files, no impossibilities.
+# data: could not be stat'd.
+# . (device 16777221, inode 19152532): 9 files, no impossibilities.
+# /Users/Scrooge/Code/GitHub/GBATetris/Code/resources: could not be stat'd.
+# /Users/Scrooge/Code/GitHub/GBATetris/Code/source (device 16777221, inode 19163491): 3 files, no impossibilities.
+# asm: could not be stat'd.
+# /Users/Scrooge/Code/GitHub/GBATetris/Code/asm: could not be stat'd.
+# resources: could not be stat'd.
+# /Users/Scrooge/Code/GitHub/GBATetris/Code/data: could not be stat'd.
+
+# 15 files, no impossibilities in 9 directories.
+
+# Implicit Rules
+
+%.a:
+#  commands to execute (from `/opt/devkitpro/devkitARM/base_rules', line 12):
+	$(SILENTMSG) $(notdir $@)
+	@rm -f $@
+	$(SILENTCMD)$(AR) -rc $@ $^
+	
+
+%.arm.o: %.arm.cpp
+#  commands to execute (from `/opt/devkitpro/devkitARM/base_rules', line 18):
+	$(SILENTMSG) $(notdir $<)
+	$(SILENTCMD)$(CXX) -MMD -MP -MF $(DEPSDIR)/$*.arm.d $(CXXFLAGS) -marm -c $< -o $@ $(ERROR_FILTER)
+	
+
+%.arm.o: %.arm.c
+#  commands to execute (from `/opt/devkitpro/devkitARM/base_rules', line 23):
+	$(SILENTMSG) $(notdir $<)
+	$(SILENTCMD)$(CC) -MMD -MP -MF $(DEPSDIR)/$*.arm.d $(CFLAGS) -marm -c $< -o $@ $(ERROR_FILTER)
+	
+
+%.arm.o: %.arm.m
+#  commands to execute (from `/opt/devkitpro/devkitARM/base_rules', line 28):
+	$(SILENTMSG) $(notdir $<)
+	$(SILENTCMD)$(CC) -MMD -MP -MF $(DEPSDIR)/$*.arm.d $(OBJCFLAGS) -marm -c $< -o $@ $(ERROR_FILTER)
+	
+
+%.thumb.o: %.thumb.cpp
+#  commands to execute (from `/opt/devkitpro/devkitARM/base_rules', line 33):
+	$(SILENTMSG) $(notdir $<)
+	$(SILENTCMD)$(CXX) -MMD -MP -MF $(DEPSDIR)/$*.thumb.d $(CXXFLAGS) -mthumb -c $< -o $@ $(ERROR_FILTER)
+	
+
+%.thumb.o: %.thumb.c
+#  commands to execute (from `/opt/devkitpro/devkitARM/base_rules', line 38):
+	$(SILENTMSG) $(notdir $<)
+	$(SILENTCMD)$(CC) -MMD -MP -MF $(DEPSDIR)/$*.thumb.d $(CFLAGS) -mthumb -c $< -o $@ $(ERROR_FILTER)
+	
+
+%.thumb.o: %.thumb.m
+#  commands to execute (from `/opt/devkitpro/devkitARM/base_rules', line 43):
+	$(SILENTMSG) $(notdir $<)
+	$(SILENTCMD)$(CC) -MMD -MP -MF $(DEPSDIR)/$*.thumb.d $(OBJCFLAGS) -mthumb -c $< -o $@ $(ERROR_FILTER)
+	
+
+%.iwram.o: %.iwram.cpp
+#  commands to execute (from `/opt/devkitpro/devkitARM/base_rules', line 48):
+	$(SILENTMSG) $(notdir $<)
+	$(SILENTCMD)$(CXX) -MMD -MP -MF $(DEPSDIR)/$*.iwram.d $(CXXFLAGS) -marm -mlong-calls -c $< -o $@ $(ERROR_FILTER)
+	
+
+%.iwram.o: %.iwram.c
+#  commands to execute (from `/opt/devkitpro/devkitARM/base_rules', line 53):
+	$(SILENTMSG) $(notdir $<)
+	$(SILENTCMD)$(CC) -MMD -MP -MF $(DEPSDIR)/$*.iwram.d $(CFLAGS) -marm -mlong-calls -c $< -o $@ $(ERROR_FILTER)
+	
+
+%.iwram.o: %.iwram.m
+#  commands to execute (from `/opt/devkitpro/devkitARM/base_rules', line 58):
+	$(SILENTMSG) $(notdir $<)
+	$(SILENTCMD)$(CC) -MMD -MP -MF $(DEPSDIR)/$*.iwram.d $(OBJCFLAGS) -marm -mlong-calls -c $< -o $@ $(ERROR_FILTER)
+	
+
+%.itcm.o: %.itcm.cpp
+#  commands to execute (from `/opt/devkitpro/devkitARM/base_rules', line 63):
+	$(SILENTMSG) $(notdir $<)
+	$(SILENTCMD)$(CXX) -MMD -MP -MF $(DEPSDIR)/$*.itcm.d $(CXXFLAGS) -marm -mlong-calls -c $< -o $@ $(ERROR_FILTER)
+	
+
+%.itcm.o: %.itcm.c
+#  commands to execute (from `/opt/devkitpro/devkitARM/base_rules', line 68):
+	$(SILENTMSG) $(notdir $<)
+	$(SILENTCMD)$(CC) -MMD -MP -MF $(DEPSDIR)/$*.itcm.d $(CFLAGS) -marm -mlong-calls -c $< -o $@ $(ERROR_FILTER)
+	
+
+%.itcm.o: %.itcm.m
+#  commands to execute (from `/opt/devkitpro/devkitARM/base_rules', line 73):
+	$(SILENTMSG) $(notdir $<)
+	$(SILENTCMD)$(CC) -MMD -MP -MF $(DEPSDIR)/$*.itcm.d $(OBJCFLAGS) -marm -mlong-calls -c $< -o $@ $(ERROR_FILTER)
+	
+
+%.o: %.cpp
+#  commands to execute (from `/opt/devkitpro/devkitARM/base_rules', line 79):
+	$(SILENTMSG) $(notdir $<)
+	$(SILENTCMD)$(CXX) -MMD -MP -MF $(DEPSDIR)/$*.d $(CXXFLAGS) -c $< -o $@ $(ERROR_FILTER)
+	
+
+%.o: %.c
+#  commands to execute (from `/opt/devkitpro/devkitARM/base_rules', line 84):
+	$(SILENTMSG) $(notdir $<)
+	$(SILENTCMD)$(CC) -MMD -MP -MF $(DEPSDIR)/$*.d $(CFLAGS) -c $< -o $@ $(ERROR_FILTER)
+	
+
+%.o: %.m
+#  commands to execute (from `/opt/devkitpro/devkitARM/base_rules', line 89):
+	$(SILENTMSG) $(notdir $<)
+	$(SILENTCMD)$(CC) -MMD -MP -MF $(DEPSDIR)/$*.d $(OBJCFLAGS) -c $< -o $@ $(ERROR_FILTER)
+	
+
+%.o: %.s
+#  commands to execute (from `/opt/devkitpro/devkitARM/base_rules', line 94):
+	$(SILENTMSG) $(notdir $<)
+	$(SILENTCMD)$(CC) -MMD -MP -MF $(DEPSDIR)/$*.d -x assembler-with-cpp $(ASFLAGS) -c $< -o $@ $(ERROR_FILTER)
+	
+
+%.o: %.S
+#  commands to execute (from `/opt/devkitpro/devkitARM/base_rules', line 99):
+	$(SILENTMSG) $(notdir $<)
+	$(SILENTCMD)$(CC) -MMD -MP -MF $(DEPSDIR)/$*.d -x assembler-with-cpp $(ASFLAGS) -c $< -o $@ $(ERROR_FILTER)
+	
+
+%.gba: %.elf
+#  commands to execute (from `/opt/devkitpro/devkitARM/gba_rules', line 13):
+	$(SILENTCMD)$(OBJCOPY) -O binary $< $@
+	@echo built ... $(notdir $@)
+	$(SILENTCMD)gbafix $@
+	
+
+%_mb.elf:
+#  commands to execute (from `/opt/devkitpro/devkitARM/gba_rules', line 19):
+	$(SILENTMSG) linking multiboot
+	$(SILENTCMD)$(LD) -specs=gba_mb.specs $(LDFLAGS) $(OFILES) $(LIBPATHS) $(LIBS) -o $@
+	
+
+%.elf:
+#  commands to execute (from `/opt/devkitpro/devkitARM/gba_rules', line 24):
+	$(SILENTMSG) linking cartridge
+	$(SILENTCMD)$(LD)  $(LDFLAGS) -specs=gba.specs $(OFILES) $(LIBPATHS) $(LIBS) -o $@
+	
+
+# 21 implicit rules, 0 (0.0%) terminal.
+
+# Files
+
+# Not a target:
+all:
+#  Command-line target.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has not been updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+.PHONY: build clean
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+/opt/devkitpro/devkitARM/gba_rules:
+#  Implicit rule search has been done.
+#  Last modified 2020-07-28 05:27:14
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+.SUFFIXES:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+Makefile:
+#  Implicit rule search has been done.
+#  Last modified 2022-05-30 23:14:36
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+build:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 134):
+	@[ -d $@ ] || mkdir -p $@
+	@$(MAKE) BUILDDIR=`cd $(BUILD) && pwd` --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
+	
+
+# Not a target:
+/opt/devkitpro/devkitARM/base_rules:
+#  Implicit rule search has been done.
+#  Last modified 2020-07-28 05:27:14
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+.DEFAULT:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+clean:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 139):
+	@echo clean ...
+	@rm -fr $(BUILD) $(TARGET).elf $(TARGET).gba 
+	
+
+# Not a target:
+/opt/devkitpro/devkitARM/base_tools:
+#  Implicit rule search has been done.
+#  Last modified 2020-07-28 05:27:14
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# files hash-table stats:
+# Load=10/1024=1%, Rehash=0, Collisions=0/30=0%
+# VPATH Search Paths
+
+# No `vpath' search paths.
+
+# General (`VPATH' variable) search path:
+# /Users/Scrooge/Code/GitHub/GBATetris/Code/source
+
+# # of strings in strcache: 4
+# # of strcache buffers: 1
+# strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
+# strcache free: total = 3980 / max = 3980 / min = 3980 / avg = 3980
+
+# Finished Make data base on Mon May 30 23:17:27 2022
+
+ 
