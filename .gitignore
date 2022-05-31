@@ -32,3 +32,5 @@
 *.app
 Code/.DS_Store
 .DS_Store
+Code/.vscode/targets.log
+Code/.vscode/dryrun.log
