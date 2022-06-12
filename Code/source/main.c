@@ -1,9 +1,27 @@
+#include "Core/gbaregs.h"
+#include "Game/Game.h"
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 int main()
 {
+	
+	InitGame();
+	
+	// Because it constant for GBA 16 frames per second result in 62.5 msec between frames
+	const int deltaTimeMS = 62;
+	for( ; ; )
+	{
+		while( REG_VCOUNT >= 160 );
+    	while( REG_VCOUNT < 160 );
+		//while(REG_VCOUNT < 160);
+		UpdateGame( deltaTimeMS );
+	}
+
+	/*
     //set GBA rendering context to MODE 3 Bitmap Rendering
 	*(unsigned int*)0x04000000 = 0x0403;
 
+	
 	int t = 0;
 	while(1){
 		int x,y;
@@ -15,17 +33,8 @@ int main()
 		}
 		++t;
 	}
+	*/
 	return 0;
-    /*
-    *(unsigned int*)0x04000000 = 0x0403;
-
-    ((unsigned short*)0x06000000)[120+80*240] = 0x001F;
-    ((unsigned short*)0x06000000)[136+80*240] = 0x03E0;
-    ((unsigned short*)0x06000000)[120+96*240] = 0x7C00;
-
-    while(1);
-
-    return 0;
-    */
+    
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
