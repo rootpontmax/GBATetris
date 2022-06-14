@@ -5,7 +5,7 @@
 #include <stdlib.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-#define TERMINO_COUNT 2 // 7
+#define TERMINO_COUNT 3 // 7
 #define ROTATION_COUNT 4
 #define FIELD_SIZE_X 10
 #define FIELD_SIZE_Y 20
@@ -23,33 +23,33 @@ static const TTetromino g_colorTetromino[TERMINO_COUNT][ROTATION_COUNT] =
     },
     // Type I
     {
+        { 0, 0, 0, 0, 11,13,13,10, 0,0,0,0, 0,0,0,0 },
+        { 0, 0, 9, 0, 0,0,12,0, 0,0,12,0, 0,0, 8,0 },
+        { 0, 0, 0, 0, 0,0,0,0, 11,13,13,10, 0,0,0,0 },
+        { 0, 9, 0, 0, 0,12,0, 0, 0,12,0, 0, 0, 8,0, 0 },
+    },
+    // Type T
+    {
+        {0,14,0,0,17,21,15,0,0,0,0,0,0,0,0,0},
         {
-             0, 0, 0, 0,
-            11,13,13,10,
-            0,0,0,0,
+            0,14,0,0,
+            0,18,15,0,
+            0,16,0,0,
+            0,0,0,0
+        },
+        {
+            0,0,0, 0,
+            17,19,15,0,
+            0,16,0,0,
+            0,0,0,0
+        },
+        {
+            0,14,0,0,
+            17,20,0,0,
+            0,16,0,0,
             0,0,0,0
         },
 
-        {
-            0,0, 9,0,
-            0,0,12,0,
-            0,0,12,0,
-            0,0, 8,0
-        },
-
-        {
-            0, 0, 0, 0,
-            0,0,0,0,
-            11,13,13,10,
-            0,0,0,0
-        },
-
-        {
-            0, 9,0, 0,
-            0,12,0, 0,
-            0,12,0, 0,
-            0, 8,0, 0
-        },
     }
 };
 /*
@@ -130,9 +130,9 @@ static void ShowNextTetromino(const TTetromino tetromino)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 static void SetupNewTetromino()
 {
-    g_thisTetrominoID = 1;//g_nextTetrominoID;
+    g_thisTetrominoID = 2;//g_nextTetrominoID;
     g_thisTetrominoRotation = 0;// g_nextTetrominoRotation;
-    g_nextTetrominoID = 1;//rand() % TERMINO_COUNT;
+    g_nextTetrominoID = 2;//rand() % TERMINO_COUNT;
     g_nextTetrominoRotation = 0;//rand() % ROTATION_COUNT;
     g_posX = 3;
     g_posY = 0;//-4;
