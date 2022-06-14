@@ -44,14 +44,16 @@ static const uint16_t           BLOCK_ATTR1 = 0x0000;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 static void LoadPalette()
 {
-    memcpy(MEM_BG_PALETTE, g_backgroundPalette, 256);
-    memcpy(MEM_SP_PALETTE, g_spritePalette, 256);
+    memcpy(MEM_BG_PALETTE, g_tetrisPal, 256);
+    //memcpy(MEM_SP_PALETTE, g_spritePalette, 256);
+    memcpy(MEM_SP_PALETTE, g_tetrisPal, 256);
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 static void LoadTiles()
 {   
-    memcpy(&MEM_TILE[0][0], g_backgroundTiles, BG_TILES_COUNT * 64);
-    memcpy(&MEM_TILE[4][1], g_spriteTiles, SP_TILES_COUNT * 64);
+    memcpy(&MEM_TILE[0][0], g_tetrisTiles, BG_TILES_COUNT * 64);
+    //memcpy(&MEM_TILE[4][1], g_spriteTiles, SP_TILES_COUNT * 64);
+    memcpy(&MEM_TILE[4][1], g_tetrisTiles, BG_TILES_COUNT * 64);
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 static void CreateBackground()
@@ -61,7 +63,7 @@ static void CreateBackground()
     const int BLOCK_SIZE = BLOCK_SIZE_X * BLOCK_SIZE_Y;
     uint16_t block[BLOCK_SIZE];
     for( int i = 0; i < BLOCK_SIZE; ++i )
-        block[i] = 0;
+        block[i] = 2;
     
     // Vertical lines
     for( int y = 0; y < 20; ++y )
@@ -101,7 +103,7 @@ static void CreateSprites()
         g_spriteAttribs[i]->attr0 = BLOCK_ATTR0;
         g_spriteAttribs[i]->attr1 = BLOCK_ATTR1;
         g_spriteAttribs[i]->attr2 = 2;
-        ShowBlockForeground(i, -1, -1 );
+        ShowBlockForeground(i, -1, -1, 0 );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -124,7 +126,7 @@ void ShowBlockBackground(const int id, int x, int y )
 
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-void ShowBlockForeground(const int id, int x, int y )
+void ShowBlockForeground(const int id, int x, int y, int tileID )
 {
     if( x < 0 || x >= 30 || y < 0 || y >= 20 )
     {
@@ -138,5 +140,6 @@ void ShowBlockForeground(const int id, int x, int y )
     const uint16_t attr1 = (uint16_t)( posX & POS_MASK );
     g_spriteAttribs[id]->attr0 = BLOCK_ATTR0 | attr0;
     g_spriteAttribs[id]->attr1 = BLOCK_ATTR1 | attr1;
+    g_spriteAttribs[id]->attr2 = ( tileID << 1 ) + 2;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
