@@ -20,6 +20,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <stdint.h>
 
+#define TRUE 1
+#define FALSE 0
+
 #define VRAM_START_ADDR		0x6000000
 #define VRAM_BG_ADDR		VRAM_START_ADDR
 #define VRAM_OBJ_ADDR		0x6010000
