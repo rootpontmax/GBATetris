@@ -15,7 +15,7 @@
 #define KEY_L        0x0200
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-void PollHardwareButtons();
+void     PollHardwareButtons();
 uint32_t WasKeyPressed(uint16_t keyCode);
 uint32_t WasKeyReleased(uint16_t keyCode);
 uint32_t IsKeyPressed(uint16_t keyCode);

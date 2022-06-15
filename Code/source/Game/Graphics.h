@@ -9,6 +9,7 @@
 #define START_FIELD_POS_X 10
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 void InitGraphics();
+void CreateBackground();
 void ShowBlockBackground(const uint16_t id, int x, int y );
 void ShowBlockForeground(const int id, int x, int y, int tileID );
 void ShowScores(const int scores);

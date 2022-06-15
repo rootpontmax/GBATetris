@@ -5,6 +5,9 @@
 #include <stdlib.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+#define GAME_MODE_LIVE 0
+#define GAME_MODE_DEAD 1
+////////////////////////////////////////////////////////////////////////////////////////////////////
 #define TERMINO_COUNT 7
 #define ROTATION_COUNT 4
 #define FIELD_SIZE_X 10
@@ -96,6 +99,7 @@ static const TTetromino g_tetromino[TERMINO_COUNT][ROTATION_COUNT] =
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 static uint8_t  g_field[FIELD_SIZE_X][FIELD_SIZE_Y];
+static int      g_mode = GAME_MODE_LIVE;
 static int      g_timeMS = 0;
 static int      g_thisTetrominoID = 0;
 static int      g_nextTetrominoID = 0;
@@ -154,15 +158,26 @@ static void SetupNewRound()
     ShowSpeed(g_speedCoef + 1);
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-void InitGame()
+static void RestartGame()
 {
-    InitGraphics();
-    SetupNewRound();
-    SetupNewRound();
+    CreateBackground();
+    g_mode = GAME_MODE_LIVE;
+    g_timeMS = 0;
+    g_layersCount = 0;
+    g_scoresCount = 0;
+    g_speedCoef = 0;
 
     for( int y = 0; y < FIELD_SIZE_Y; ++y )
         for( int x = 0; x < FIELD_SIZE_X; ++x )
             g_field[x][y] = 0;
+    
+    SetupNewRound();
+    SetupNewRound();
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////
+void InitGame()
+{    
+    RestartGame();
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 static uint8_t CanMoveTetromino(const TTetromino tetromino, const int deltaX, const int deltaY)
@@ -190,6 +205,35 @@ static uint8_t CanMoveTetromino(const TTetromino tetromino, const int deltaX, co
     return TRUE;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+static void GameOver()
+{
+    // Hide sprites
+    for( int i = 0; i < 8; ++i )
+        ShowBlockForeground(i, -1, -1, 0 );
+
+    // Draw black background
+    for( int y = 0; y < FIELD_SIZE_Y; ++y )
+        for( int x = 0; x < FIELD_SIZE_X; ++x )
+        {
+            const int posX = x + START_FIELD_POS_X;
+            ShowBlockBackground(2, posX, y);
+        }
+
+    // Draw game over sign
+    const int gameOverPosX = 12;
+    const int gameOverPosY = 9;
+    const int gameOverStartTileID = 74;
+    for( int i = 0; i < 6; ++i )
+    {
+        const int x = gameOverPosX + i;
+        const int y = gameOverPosY;
+        const int tileID = gameOverStartTileID + i;
+        ShowBlockBackground(tileID, x, y);
+    }
+
+    g_mode = GAME_MODE_DEAD;
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////
 static void RestTetromino(const TTetromino tetromino)
 {
     int offset = 0;
@@ -202,6 +246,12 @@ static void RestTetromino(const TTetromino tetromino)
                 const int posY = g_posY + y;
                 if( posX >= 0 && posX < FIELD_SIZE_X && posY >= 0 && posY < FIELD_SIZE_Y )
                     g_field[posX][posY] = tetromino[offset];
+
+                if( 0 == posY)
+                {
+                    GameOver();
+                    return;
+                }
             }
             ++offset;
         }
@@ -235,6 +285,16 @@ static void CheckFullLayers()
     memcpy(&g_field[0][0], &field[0][0], FIELD_SIZE_X * FIELD_SIZE_Y);
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+static void CheckGameOver()
+{
+    for( int x = 0; x < FIELD_SIZE_X; ++x )
+        if( g_field[x][0] != 0 )
+        {
+            GameOver();
+            return;
+        }
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////
 static void SetupBackground()
 {
     for( int y = 0; y < FIELD_SIZE_Y; ++y )
@@ -252,13 +312,25 @@ static void FinishRound()
 {
     RestTetromino(g_tetromino[g_thisTetrominoID][g_thisTetrominoRotation]);
     CheckFullLayers();
-    SetupBackground();
-    SetupNewRound();
+    CheckGameOver();
+
+    if( GAME_MODE_LIVE == g_mode )
+    {
+        SetupBackground();
+        SetupNewRound();
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 static void UpdateInput()
 {
     PollHardwareButtons();
+
+    if( GAME_MODE_DEAD == g_mode )
+    {
+        if( WasKeyPressed( KEY_START ) || WasKeyPressed( KEY_A ) || WasKeyPressed( KEY_B ))
+            RestartGame();
+        return;
+    }
 
     if( WasKeyReleased( KEY_DOWN ) )
         g_bIsFastDownAllowed = TRUE;
@@ -311,21 +383,6 @@ static void UpdateInput()
 
     if( WasKeyPressed( KEY_LEFT ) && CanMoveTetromino(g_tetromino[g_thisTetrominoID][g_thisTetrominoRotation], -1, 0) )
         --g_posX;
-        
-
-    /*
-    if( WasKeyReleased( KEY_RIGHT ) )
-        ++g_posX;
-
-    if( WasKeyReleased( KEY_LEFT ) )
-        --g_posX;
-
-    if( WasKeyPressed( KEY_UP ) )
-        --g_posY;
-
-    if( WasKeyPressed( KEY_DOWN ) )
-        ++g_posY;
-        */
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 static void UpdateTimer(const int timeMS)
@@ -352,6 +409,7 @@ void UpdateGame(const int timeMS)
 {
     UpdateInput();
     UpdateTimer(timeMS);
-    Render();
+    if( GAME_MODE_LIVE == g_mode )
+        Render();
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////

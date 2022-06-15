@@ -65,7 +65,31 @@ static void LoadTiles()
     memcpy(&MEM_TILE[4][1], g_tetrisTiles, BG_TILES_COUNT * 64);
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-static void CreateBackground()
+static void CreateSplashScreen()
+{
+    const int BLOCK_SIZE_X = 32;
+    const int BLOCK_SIZE_Y = 32;
+    const int BLOCK_SIZE = BLOCK_SIZE_X * BLOCK_SIZE_Y;
+    uint16_t block[BLOCK_SIZE];
+    for( int i = 0; i < BLOCK_SIZE; ++i )
+        block[i] = 2;
+
+
+    const int splashPosX = 12;
+    const int splashPosY = 9;
+    const int splashStartTileID = 58;
+    for( int i = 0; i < 6; ++i )
+    {
+        const int x = splashPosX + i;
+        const int y = splashPosY;
+        const int offset = y * 32 + x;
+        block[offset] = splashStartTileID + i;
+    }
+
+    memcpy(&MEM_SCREENBLOCKS[SCREEN_BLOCK_BG], block, BLOCK_SIZE * sizeof(uint16_t) );
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////
+void CreateBackground()
 {
     const int BLOCK_SIZE_X = 32;
     const int BLOCK_SIZE_Y = 32;
@@ -122,7 +146,8 @@ void InitGraphics()
 {
     LoadPalette();
     LoadTiles();
-    CreateBackground();
+    //CreateBackground();
+    CreateSplashScreen();
     CreateSprites();
 
     // Backgrounds control register

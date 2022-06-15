@@ -1,4 +1,5 @@
 #include "Core/gbaregs.h"
+#include "Core/Input.h"
 #include "Game/Game.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -20,7 +21,19 @@ static uint32_t ProfilerStop()
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 int main()
-{
+{	
+	InitGraphics();
+	ProfilerStart();
+	for( ; ; )
+	{
+		PollHardwareButtons();
+		if( WasKeyPressed( KEY_START ) || WasKeyPressed( KEY_A ) || WasKeyPressed( KEY_B ))
+		{
+			const uint32_t deltaTimeNS = ProfilerStop();
+			break;
+		}
+	}
+
 	InitGame();
 	ProfilerStart();
 	int frameCount = 0;
