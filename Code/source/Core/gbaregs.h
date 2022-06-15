@@ -20,6 +20,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <stdint.h>
 
+typedef int BOOL;
 #define TRUE 1
 #define FALSE 0
 
