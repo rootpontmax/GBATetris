@@ -175,7 +175,7 @@ static void SetupNewTetromino()
     g_nextTetrominoID = rand() % TERMINO_COUNT;
     g_nextTetrominoRotation = rand() % ROTATION_COUNT;
     g_posX = 3;
-    g_posY = 0;//-4;
+    g_posY = -4;
     ShowNextTetromino();
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -234,7 +234,6 @@ static void RestTetromino(const TTetromino tetromino)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 static void SetupBackground()
 {
-    ///*
     for( int y = 0; y < FIELD_SIZE_Y; ++y )
         for( int x = 0; x < FIELD_SIZE_X; ++x )
         {
@@ -242,22 +241,8 @@ static void SetupBackground()
             if( 0 == g_field[x][y] )
                 ShowBlockBackground(1, posX, y);
             else
-                //ShowBlockBackground(0, posX, y);
                 ShowBlockBackground(g_field[x][y], posX, y);
         }
-    //*/
-
-/*
-   int tileID = 0;
-   for( int y = 0; y < FIELD_SIZE_Y; ++y )
-        for( int x = 0; x < FIELD_SIZE_X; ++x )
-        {
-            const int posX = x + START_FIELD_POS_X;
-            ShowBlockBackground(tileID, posX, y);
-            ++tileID;
-            tileID %= 64;
-        }
-        */
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 static void FinishRound()
@@ -271,7 +256,7 @@ static void UpdateInput()
 {
     PollHardwareButtons();
 
-    if( IsKeyPressed( KEY_DOWN ) )
+    if( WasKeyPressed( KEY_DOWN ) )
     {
         if( CanMoveTetromino(g_tetromino[g_thisTetrominoID][g_thisTetrominoRotation], 0, 1) )
             ++g_posY;
@@ -312,10 +297,10 @@ static void UpdateInput()
     
         
     
-    if( IsKeyPressed( KEY_RIGHT ) && CanMoveTetromino(g_tetromino[g_thisTetrominoID][g_thisTetrominoRotation], 1, 0) )
+    if( WasKeyPressed( KEY_RIGHT ) && CanMoveTetromino(g_tetromino[g_thisTetrominoID][g_thisTetrominoRotation], 1, 0) )
         ++g_posX;
 
-    if( IsKeyPressed( KEY_LEFT ) && CanMoveTetromino(g_tetromino[g_thisTetrominoID][g_thisTetrominoRotation], -1, 0) )
+    if( WasKeyPressed( KEY_LEFT ) && CanMoveTetromino(g_tetromino[g_thisTetrominoID][g_thisTetrominoRotation], -1, 0) )
         --g_posX;
         
 
