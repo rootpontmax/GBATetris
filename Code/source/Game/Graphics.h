@@ -11,6 +11,10 @@
 void InitGraphics();
 void ShowBlockBackground(const uint16_t id, int x, int y );
 void ShowBlockForeground(const int id, int x, int y, int tileID );
+void ShowScores(const int scores);
+void ShowLayers(const int layers);
+void ShowSpeed(const int speed);
+void ShowFPS(const int val);
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #endif

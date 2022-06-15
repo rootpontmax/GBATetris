@@ -9,8 +9,38 @@
 #define ROTATION_COUNT 4
 #define FIELD_SIZE_X 10
 #define FIELD_SIZE_Y 20
+#define SCORES_FULL_LAYER 100
+#define SCORES_DOWN 100
+#define LAYERS_PER_SPEED 10
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 typedef uint8_t TTetromino[16];
+////////////////////////////////////////////////////////////////////////////////////////////////////
+static const int g_delayTimeArrayMS[] =
+{
+    1000,//800,
+    600,
+    400,
+    200,
+    100,
+    80,
+    60,
+    50,
+    40,
+    30
+};
+////////////////////////////////////////////////////////////////////////////////////////////////////
+static const int SPEED_COUNT = sizeof( g_delayTimeArrayMS ) / sizeof( g_delayTimeArrayMS[0] );
+////////////////////////////////////////////////////////////////////////////////////////////////////
+static const int g_tetromoniStartY[TERMINO_COUNT][ROTATION_COUNT] =
+{
+    {-2, -2, -2, -2 }, // Type O
+    {-1, -3, -2, -3 }, // Type I
+    {-1, -2, -2, -2 }, // Type T
+    {-1, -2, -2, -2 }, // Type J
+    {-1, -2, -2, -2 }, // Type L
+    {-1, -2, -2, -2 }, // Type Z
+    {-1, -2, -2, -2 }, // Type S
+};
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 static const TTetromino g_tetromino[TERMINO_COUNT][ROTATION_COUNT] =
 {    
@@ -20,9 +50,9 @@ static const TTetromino g_tetromino[TERMINO_COUNT][ROTATION_COUNT] =
         {0,0,0,0,0,4,5,0,0,6,7,0,0,0,0,0},
         {0,0,0,0,0,4,5,0,0,6,7,0,0,0,0,0},
         {0,0,0,0,0,4,5,0,0,6,7,0,0,0,0,0},
-    },
-    // Type I
+    },    
     {
+        // Type I
         {0,0,0,0,11,13,13,10,0,0,0,0,0,0,0,0},
         {0,0,9,0,0,0,12,0,0,0,12,0,0,0,8,0},
         {0,0,0,0,0,0,0,0,11,13,13,10,0,0,0,0},
@@ -74,6 +104,10 @@ static int      g_nextTetrominoRotation = 0;
 static int      g_posX = 0;
 static int      g_posY = 0;
 static int      g_delayTimeMS = 1000;
+static int      g_layersCount = 0;
+static int      g_scoresCount = 0;
+static int      g_speedCoef = 0;
+static BOOL     g_bIsFastDownAllowed = TRUE;      
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 static void ShowTetromino( const TTetromino tetromino, int posX, int posY, int idOffset )
 {
@@ -101,22 +135,30 @@ static void ShowNextTetromino()
     ShowTetromino(g_tetromino[g_nextTetrominoID][g_nextTetrominoRotation], NEXT_TETRAMINO_BLOCK_X, NEXT_TETRAMINO_BLOCK_Y, 4);
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-static void SetupNewTetromino()
+static void SetupNewRound()
 {
     g_thisTetrominoID = g_nextTetrominoID;
     g_thisTetrominoRotation = g_nextTetrominoRotation;
     g_nextTetrominoID = rand() % TERMINO_COUNT;
     g_nextTetrominoRotation = rand() % ROTATION_COUNT;
     g_posX = 3;
-    g_posY = -4;
+    g_posY = g_tetromoniStartY[g_thisTetrominoID][g_thisTetrominoRotation];
+    g_speedCoef = g_layersCount / LAYERS_PER_SPEED;
+    if( g_speedCoef >= SPEED_COUNT )
+        g_speedCoef = SPEED_COUNT - 1;
+    g_delayTimeMS = g_delayTimeArrayMS[g_speedCoef];
+    g_bIsFastDownAllowed = FALSE;
     ShowNextTetromino();
+    ShowScores(g_scoresCount);
+    ShowLayers(g_layersCount);
+    ShowSpeed(g_speedCoef + 1);
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 void InitGame()
 {
     InitGraphics();
-    SetupNewTetromino();
-    SetupNewTetromino();
+    SetupNewRound();
+    SetupNewRound();
 
     for( int y = 0; y < FIELD_SIZE_Y; ++y )
         for( int x = 0; x < FIELD_SIZE_X; ++x )
@@ -181,7 +223,12 @@ static void CheckFullLayers()
             field[x][posY] = g_field[x][y];
         }
 
-        if( !bHasFullRow )
+        if( bHasFullRow )
+        {
+            ++g_layersCount;
+            g_scoresCount += SCORES_FULL_LAYER;
+        }
+        else
             --posY;
     }
 
@@ -206,20 +253,26 @@ static void FinishRound()
     RestTetromino(g_tetromino[g_thisTetrominoID][g_thisTetrominoRotation]);
     CheckFullLayers();
     SetupBackground();
-    SetupNewTetromino();
+    SetupNewRound();
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 static void UpdateInput()
 {
     PollHardwareButtons();
 
-    if( WasKeyPressed( KEY_DOWN ) )
+    if( WasKeyReleased( KEY_DOWN ) )
+        g_bIsFastDownAllowed = TRUE;
+
+    if( g_bIsFastDownAllowed && IsKeyPressed( KEY_DOWN ) )
     {
         if( CanMoveTetromino(g_tetromino[g_thisTetrominoID][g_thisTetrominoRotation], 0, 1) )
+        {
             ++g_posY;
+        }
         else
         {
             FinishRound();
+            g_scoresCount += SCORES_DOWN;
             return;
         }
     }
@@ -293,10 +346,6 @@ static void UpdateTimer(const int timeMS)
 static void Render()
 {
     ShowThisTetromino(g_tetromino[g_thisTetrominoID][g_thisTetrominoRotation], g_posX, g_posY);
-
-    // CRAP
-    //SetupBackground();
-    // end of CRAP
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 void UpdateGame(const int timeMS)

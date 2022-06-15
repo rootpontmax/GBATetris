@@ -17,6 +17,16 @@
 
 
 #define SCREEN_BLOCK_BG 8
+#define FPS_POS_X 0
+#define FPS_POS_Y 19
+#define DIGIT_START 64
+
+#define SCORES_POS_X 0
+#define SCORES_POS_Y 1
+#define LAYERS_POS_X 0
+#define LAYERS_POS_Y 2
+#define SPEED_POS_X 0
+#define SPEED_POS_Y 3
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 typedef uint16_t Tile[32];
@@ -84,12 +94,14 @@ static void CreateBackground()
         }
 
     // Free LCD blocks for next tetramino
+    /*
     for( int y = 0; y < 4; ++y )
         for( int x = 0; x < 4; ++x )
         {
             const int offset = ( y + NEXT_TETRAMINO_BLOCK_Y ) * 32 + x + NEXT_TETRAMINO_BLOCK_X;
             block[offset] = 1;
         }
+        */
 
     memcpy(&MEM_SCREENBLOCKS[SCREEN_BLOCK_BG], block, BLOCK_SIZE * sizeof(uint16_t) );
 }
@@ -141,5 +153,68 @@ void ShowBlockForeground(const int id, int x, int y, int tileID )
     g_spriteAttribs[id]->attr0 = BLOCK_ATTR0 | attr0;
     g_spriteAttribs[id]->attr1 = BLOCK_ATTR1 | attr1;
     g_spriteAttribs[id]->attr2 = ( tileID << 1 ) + 2;
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////
+static void ClearDigit(const int count, const int x, const int y)
+{
+    // Clear
+    for( int i = 0; i < 8; ++i )
+    {
+        const int posX = x + i;
+        ShowBlockBackground(0, posX, y);
+    }
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////
+static void ShowDigit(const int val, const int x, const int y, int divider)
+{
+    // Define digits of value
+    int value = val;
+    BOOL bHasValues = FALSE;
+    int pos = 0;
+    while( divider > 0 )
+    {
+        const int digit = value / divider;
+        if( digit > 0 )
+            bHasValues = TRUE;
+
+        value -= digit * divider;
+
+        if( bHasValues )
+        {
+            ShowBlockBackground(DIGIT_START + digit, pos + x, y);
+            ++pos;
+        }
+
+        divider /= 10;
+
+        // Show only zero
+        if( divider <= 0 && !bHasValues )
+            ShowBlockBackground(DIGIT_START + digit, pos + x, y);
+    }
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////
+void ShowScores(const int scores)
+{
+    ClearDigit(9, SCORES_POS_X, SCORES_POS_Y);
+    ShowDigit(scores, SCORES_POS_X, SCORES_POS_Y, 1000000);
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////
+void ShowLayers(const int layers)
+{
+    ClearDigit(3, LAYERS_POS_X, LAYERS_POS_Y);
+    ShowDigit(layers, LAYERS_POS_X, LAYERS_POS_Y, 1000);
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////
+void ShowSpeed(const int speed)
+{
+    ClearDigit(2, SPEED_POS_X, SPEED_POS_Y);
+    ShowDigit(speed, SPEED_POS_X, SPEED_POS_Y, 100);
+
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////
+void ShowFPS(const int val)
+{
+    ClearDigit(4, FPS_POS_X, FPS_POS_Y);
+    ShowDigit(val, FPS_POS_X, FPS_POS_Y, 1000);
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
