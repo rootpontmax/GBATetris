@@ -2,7 +2,7 @@
 #define GAME_BACKGROUND_INCLUDED
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-const unsigned short g_tetrisTiles[2048] __attribute__((aligned(4)))=
+const uint16_t g_tetrisTiles[2048] __attribute__((aligned(4)))=
 {
 	0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,
 	0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,
@@ -293,7 +293,7 @@ const unsigned short g_tetrisTiles[2048] __attribute__((aligned(4)))=
 	0x0303,0x0303,0x0303,0x0303,0x0303,0x0303,0x0303,0x0303,	
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-const unsigned short g_tetrisPal[256] __attribute__((aligned(4)))=
+const uint16_t g_tetrisPal[256] __attribute__((aligned(4)))=
 {
 	0x0000,0x001F,0x7C00,0x7C1F,0x03E0,0x7FE0,0x021F,0x7FFF,
 	0x3DEF,0x03FF,0x0421,0x0000,0x0000,0x0000,0x0000,0x0000,

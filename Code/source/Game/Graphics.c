@@ -35,7 +35,7 @@ typedef struct SSpriteAttr
 #define MEM_SP_PALETTE          ((uint16_t*)(0x05000200)) // Sprite palette
 #define MEM_VRAM                ((volatile uint32_t*)VRAM_START_ADDR)
 #define MEM_TILE                ((TileBlock*)VRAM_START_ADDR)
-#define MEM_SCREENBLOCKS        ((ScreenBlock*)0x6000000)
+#define MEM_SCREENBLOCKS        ((ScreenBlock*)VRAM_START_ADDR)
 #define MEM_OAM                 ((volatile SSpriteAttr *)0x07000000) // Object Attribute Memory
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 volatile SSpriteAttr           *g_spriteAttribs[8];// = &MEM_OAM[0];
@@ -77,11 +77,18 @@ static void CreateBackground()
     }
 
     // Free LCD blocks
+    int testOffset = 0;
     for( int y = 0; y < 20; ++y )
         for( int x = 0; x < 10; ++x )
         {
-            const int offset = y * 32 + x + 10;
-            block[offset] = 1;
+            const int offset = y * 32 + x + START_FIELD_POS_X;
+            //block[offset] = 1;
+
+            // CRAP
+            block[offset] = 32;//testOffset;
+            ++testOffset;
+            testOffset %= BG_TILES_COUNT;
+            // end of CRAP
         }
 
     // Free LCD blocks for next tetramino
@@ -93,6 +100,7 @@ static void CreateBackground()
         }
 
     memcpy(&MEM_SCREENBLOCKS[1], block, BLOCK_SIZE * sizeof(uint16_t) );
+    //memcpy(&MEM_SCREENBLOCKS[1], block, BLOCK_SIZE * sizeof(uint16_t) );
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 static void CreateSprites()
@@ -115,15 +123,22 @@ void InitGraphics()
     CreateSprites();
 
     REG_BG0_CONTROL = 0x0180;// 0000 0001 1000 0000;
-    REG_BG1_CONTROL = 0x4285; // 0100 0010 1000 0101
+    //REG_BG1_CONTROL = 0x4285; // 0100 0010 1000 0101
     //REG_DISPLAYCONTROL =  VIDEOMODE_0 | BACKGROUND_0 | BACKGROUND_1;
     REG_DISPLAYCONTROL =  VIDEOMODE_0 | BACKGROUND_0 | ENABLE_OBJECTS | MAPPINGMODE_1D;// | BACKGROUND_1;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-void ShowBlockBackground(const int id, int x, int y )
+void ShowBlockBackground(const uint16_t id, int x, int y )
 {
-    //memcpy(&MEM_SCREENBLOCKS[1], block, BLOCK_SIZE * sizeof(uint16_t) );
+    const int offset = y * 32 + x; 
+    MEM_SCREENBLOCKS[1][offset] = id;
 
+/*
+   MEM_SCREENBLOCKS[1][0] = 4;
+   MEM_SCREENBLOCKS[1][1] = 4;
+   MEM_SCREENBLOCKS[1][32] = 4;
+   MEM_SCREENBLOCKS[1][65] = 4;
+   */
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 void ShowBlockForeground(const int id, int x, int y, int tileID )
