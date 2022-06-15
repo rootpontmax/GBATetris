@@ -5,14 +5,14 @@
 #include <stdlib.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-#define TERMINO_COUNT 3 // 7
+#define TERMINO_COUNT 7
 #define ROTATION_COUNT 4
 #define FIELD_SIZE_X 10
 #define FIELD_SIZE_Y 20
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 typedef uint8_t TTetromino[16];
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-static const TTetromino g_colorTetromino[TERMINO_COUNT][ROTATION_COUNT] =
+static const TTetromino g_tetromino[TERMINO_COUNT][ROTATION_COUNT] =
 {
     // Type O
     {
@@ -23,34 +23,113 @@ static const TTetromino g_colorTetromino[TERMINO_COUNT][ROTATION_COUNT] =
     },
     // Type I
     {
-        { 0, 0, 0, 0, 11,13,13,10, 0,0,0,0, 0,0,0,0 },
-        { 0, 0, 9, 0, 0,0,12,0, 0,0,12,0, 0,0, 8,0 },
-        { 0, 0, 0, 0, 0,0,0,0, 11,13,13,10, 0,0,0,0 },
-        { 0, 9, 0, 0, 0,12,0, 0, 0,12,0, 0, 0, 8,0, 0 },
+        { 0,0,0,0,11,13,13,10,0,0,0,0,0,0,0,0 },
+        { 0,0,9,0,0,0,12,0,0,0,12,0,0,0,8,0 },
+        { 0,0,0,0,0,0,0,0,11,13,13,10,0,0,0,0 },
+        { 0,9,0,0,0,12,0,0,0,12,0,0,0,8,0,0 },
     },
     // Type T
     {
         {0,14,0,0,17,21,15,0,0,0,0,0,0,0,0,0},
-        {
-            0,14,0,0,
-            0,18,15,0,
-            0,16,0,0,
-            0,0,0,0
-        },
-        {
-            0,0,0, 0,
-            17,19,15,0,
-            0,16,0,0,
-            0,0,0,0
-        },
-        {
-            0,14,0,0,
-            17,20,0,0,
-            0,16,0,0,
-            0,0,0,0
-        },
+        {0,14,0,0,0,18,15,0,0,16,0,0,0,0,0,0},
+        {0,0,0, 0,17,19,15,0,0,16,0,0,0,0,0,0},
+        {0,14,0,0,17,20,0,0,0,16,0,0,0,0,0,0},
+    },
 
+    // Type J
+    {
+        { 22,0,0,0,
+          29,30,23,0,
+          0,0,0,0,
+          0,0,0,0},
+
+          { 0,26,23,0,
+          0,31,0,0,
+          0,24,0,0,
+          0,0,0,0},
+
+          { 0,0,0,0,
+          25,30,27,0,
+          0,0,24,0,
+          0,0,0,0},
+
+          { 0,22,0,0,
+          0,31,0,0,
+          25,28,0,0,
+          0,0,0,0},
+    },
+
+    // Type L
+    {
+        { 0,0,32,0,
+          35,40,38,0,
+          0,0,0,0,
+          0,0,0,0},
+
+          {0,32,0,0,
+          0,41,0,0,
+          0,39,33,0,
+          0,0,0,0},
+
+          { 0,0,0,0,
+          36,40,33,0,
+          34,0,0,0,
+          0,0,0,0},
+
+          {35,37,0,0,
+          0,41,0,0,
+          0,34,0,0,
+          0,0,0,0},
+    },
+
+
+    // Type Z
+    {
+        { 0,49,43,0,
+          45,47,0,0,
+          0,0,0,0,
+          0,0,0,0},
+
+          {0,42,0,0,
+          0,48,46,0,
+          0,0,44,0,
+          0,0,0,0},
+
+          { 0,0,0,0,
+          0,49,43,0,
+          45,47,0,0,
+          0,0,0,0},
+
+          {42,0,0,0,
+          48,46,0,0,
+          0,44,0,0,
+          0,0,0,0},
+    },
+
+    // Type S
+    {
+        { 53,54,0,0,
+          0,56,51,0,
+          0,0,0,0,
+          0,0,0,0},
+
+          {0,0,50,0,
+          0,57,55,0,
+          0,52,0,0,
+          0,0,0,0},
+
+          { 0,0,0,0,
+          53,54,0,0,
+          0,56,51,0,
+          0,0,0,0},
+
+          {0,50,0,0,
+          57,55,0,0,
+          52,0,0,0,
+          0,0,0,0},
     }
+
+
 };
 /*
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -76,7 +155,7 @@ static const uint16_t   g_tetromino[TERMINO_COUNT][ROTATION_COUNT] =
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 static uint8_t  g_field[FIELD_SIZE_X][FIELD_SIZE_Y];
 static int      g_timeMS = 0;
-static int      g_thisTetrominoID = 6;
+static int      g_thisTetrominoID = 0;
 static int      g_nextTetrominoID = 0;
 static int      g_thisTetrominoRotation = 0;
 static int      g_nextTetrominoRotation = 0;
@@ -99,24 +178,6 @@ static void ShowTetromino( const TTetromino tetromino, int posX, int posY, int i
             ++offset;
         }
 }
-/*
-////////////////////////////////////////////////////////////////////////////////////////////////////
-static void ShowTetromino(const uint16_t code, int posX, int posY, int idOffset )
-{
-    int offset = 0;
-    int id = 0;
-    for( int y = 0; y < 4; ++y )
-        for( int x = 0; x < 4; ++x )
-        {
-            if( code & g_tetrominoMask[offset] )
-            {
-                ShowBlockForeground(id + idOffset, posX + x, posY + y);
-                ++id;
-            }
-            ++offset;
-        }
-}
-*/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 static void ShowThisTetromino(const TTetromino tetromino, int posX, int posY )
 {
@@ -130,13 +191,13 @@ static void ShowNextTetromino(const TTetromino tetromino)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 static void SetupNewTetromino()
 {
-    g_thisTetrominoID = 2;//g_nextTetrominoID;
-    g_thisTetrominoRotation = 0;// g_nextTetrominoRotation;
-    g_nextTetrominoID = 2;//rand() % TERMINO_COUNT;
-    g_nextTetrominoRotation = 0;//rand() % ROTATION_COUNT;
+    g_thisTetrominoID = g_nextTetrominoID;
+    g_thisTetrominoRotation = g_nextTetrominoRotation;
+    g_nextTetrominoID = rand() % TERMINO_COUNT;
+    g_nextTetrominoRotation = rand() % ROTATION_COUNT;
     g_posX = 3;
-    g_posY = 0;//-4;
-    ShowNextTetromino(g_colorTetromino[g_nextTetrominoID][g_nextTetrominoRotation]);
+    g_posY = -4;
+    ShowNextTetromino(g_tetromino[g_nextTetrominoID][g_nextTetrominoRotation]);
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 void InitGame()
@@ -150,15 +211,13 @@ void InitGame()
             g_field[x][y] = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-static uint8_t CanMoveTetromino(const int deltaX, const int deltaY)
+static uint8_t CanMoveTetromino(const TTetromino tetromino, const int deltaX, const int deltaY)
 {
-    /*
-    const uint16_t code = g_tetromino[g_thisTetrominoID][g_thisTetrominoRotation];
     int offset = 0;
     for( int y = 0; y < 4; ++y )
         for( int x = 0; x < 4; ++x )
         {
-            if( code & g_tetrominoMask[offset] )
+            if( tetromino[offset] > 0 )
             {
                 const int posX = g_posX + x + deltaX;
                 const int posY = g_posY + y + deltaY;
@@ -170,7 +229,6 @@ static uint8_t CanMoveTetromino(const int deltaX, const int deltaY)
             }
             ++offset;
         }
-        */
 
     return TRUE;
 }
@@ -196,18 +254,28 @@ static void UpdateInput()
         g_thisTetrominoRotation %= 4;
     }
 
+    
     /*
     if( WasKeyPressed( KEY_SELECT ) )
     {
         g_thisTetrominoRotation = 0;
     }
+
+    if( WasKeyPressed( KEY_START ) )
+    {
+        ++g_thisTetrominoID;
+        g_thisTetrominoID %= TERMINO_COUNT;
+    }
     */
 
     
-    if( WasKeyReleased( KEY_RIGHT ) && CanMoveTetromino(1, 0) )
+    if( IsKeyPressed( KEY_DOWN ) && CanMoveTetromino(g_tetromino[g_thisTetrominoID][g_thisTetrominoRotation], 0, 1) )
+        ++g_posY;
+    
+    if( IsKeyPressed( KEY_RIGHT ) && CanMoveTetromino(g_tetromino[g_thisTetrominoID][g_thisTetrominoRotation], 1, 0) )
         ++g_posX;
 
-    if( WasKeyReleased( KEY_LEFT ) && CanMoveTetromino(-1, 0) )
+    if( IsKeyPressed( KEY_LEFT ) && CanMoveTetromino(g_tetromino[g_thisTetrominoID][g_thisTetrominoRotation], -1, 0) )
         --g_posX;
         
 
@@ -229,16 +297,14 @@ static void UpdateInput()
 static void UpdateTimer()
 {
     if( g_timeMS >= g_delayTimeMS )
-    {
-        /*    
-        if( CanMoveTetromino(0, 1) )
+    {    
+        if( CanMoveTetromino(g_tetromino[g_thisTetrominoID][g_thisTetrominoRotation], 0, 1) )
             ++g_posY;
         else
         {
             RestTetromino();
             SetupNewTetromino();
         }
-        */
         g_timeMS = 0;
     }
 }
@@ -248,6 +314,6 @@ void UpdateGame(int timeMS)
     g_timeMS += timeMS;
     UpdateInput();
     UpdateTimer();
-    ShowThisTetromino(g_colorTetromino[g_thisTetrominoID][g_thisTetrominoRotation], g_posX, g_posY);
+    ShowThisTetromino(g_tetromino[g_thisTetrominoID][g_thisTetrominoRotation], g_posX, g_posY);
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
