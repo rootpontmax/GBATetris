@@ -30,6 +30,7 @@ int main()
 		if( WasKeyPressed( KEY_START ) || WasKeyPressed( KEY_A ) || WasKeyPressed( KEY_B ))
 		{
 			const uint32_t deltaTimeNS = ProfilerStop();
+			srand(deltaTimeNS);
 			break;
 		}
 	}

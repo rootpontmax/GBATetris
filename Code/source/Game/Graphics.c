@@ -182,11 +182,10 @@ void ShowBlockForeground(const int id, int x, int y, int tileID )
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 static void ClearDigit(const int count, const int x, const int y)
 {
-    // Clear
     for( int i = 0; i < 8; ++i )
     {
         const int posX = x + i;
-        ShowBlockBackground(0, posX, y);
+        ShowBlockBackground(2, posX, y);
     }
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////

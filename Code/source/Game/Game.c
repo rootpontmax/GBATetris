@@ -111,7 +111,8 @@ static int      g_delayTimeMS = 1000;
 static int      g_layersCount = 0;
 static int      g_scoresCount = 0;
 static int      g_speedCoef = 0;
-static BOOL     g_bIsFastDownAllowed = TRUE;      
+static BOOL     g_bIsFastDownAllowed = TRUE;
+static BOOL     g_bIsPaused = FALSE;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 static void ShowTetromino( const TTetromino tetromino, int posX, int posY, int idOffset )
 {
@@ -332,7 +333,15 @@ static void UpdateInput()
         return;
     }
 
-    if( WasKeyReleased( KEY_DOWN ) )
+    if( WasKeyPressed( KEY_START ) )
+    {
+        if( g_bIsPaused )
+            g_bIsPaused = FALSE;
+        else
+            g_bIsPaused = TRUE;
+    }
+
+    if( WasKeyReleased( KEY_DOWN ) || !IsKeyPressed( KEY_DOWN ) )
         g_bIsFastDownAllowed = TRUE;
 
     if( g_bIsFastDownAllowed && IsKeyPressed( KEY_DOWN ) )
@@ -387,6 +396,9 @@ static void UpdateInput()
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 static void UpdateTimer(const int timeMS)
 {
+    if( g_bIsPaused )
+        return;
+
     g_timeMS += timeMS;
 
     if( g_timeMS >= g_delayTimeMS )
