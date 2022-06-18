@@ -13,23 +13,29 @@
 #define FIELD_SIZE_X 10
 #define FIELD_SIZE_Y 20
 #define SCORES_FULL_LAYER 100
-#define SCORES_DOWN 100
+#define SCORES_DOWN_CONTROLLED 50
+#define SCORES_DOWN_UNCONTROLLED 100
 #define LAYERS_PER_SPEED 10
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 typedef uint8_t TTetromino[16];
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 static const int g_delayTimeArrayMS[] =
 {
-    1000,//800,
+    800,
+    700,
     600,
+    500,
     400,
     200,
     100,
-    80,
+    90,
+    80,    
+    70,
     60,
     50,
     40,
-    30
+    30,
+    20
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 static const int SPEED_COUNT = sizeof( g_delayTimeArrayMS ) / sizeof( g_delayTimeArrayMS[0] );
@@ -181,7 +187,7 @@ void InitGame()
     RestartGame();
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-static uint8_t CanMoveTetromino(const TTetromino tetromino, const int deltaX, const int deltaY)
+static BOOL CanMoveTetromino(const TTetromino tetromino, const int deltaX, const int deltaY)
 {
     int offset = 0;
     for( int y = 0; y < 4; ++y )
@@ -204,6 +210,28 @@ static uint8_t CanMoveTetromino(const TTetromino tetromino, const int deltaX, co
         }
 
     return TRUE;
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////
+static BOOL CanRotateTetromino(const TTetromino tetromino, int *pPosX, const int posY)
+{
+    if( CanMoveTetromino(tetromino, 0, 0 ) )
+        return TRUE;
+
+    for( int i = 1; i < 4; ++i )
+    {
+        if( CanMoveTetromino(tetromino, i, 0 ) )
+        {
+            *pPosX = *pPosX + i;
+            return TRUE;
+        }
+        else if( CanMoveTetromino(tetromino, -i, 0 ) )
+        {
+            *pPosX = *pPosX - i;
+            return TRUE;
+        }
+    }
+    
+    return FALSE;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 static void GameOver()
@@ -326,6 +354,7 @@ static void UpdateInput()
 {
     PollHardwareButtons();
 
+    // Restart after game over
     if( GAME_MODE_DEAD == g_mode )
     {
         if( WasKeyPressed( KEY_START ) || WasKeyPressed( KEY_A ) || WasKeyPressed( KEY_B ))
@@ -333,6 +362,7 @@ static void UpdateInput()
         return;
     }
 
+    // Pause
     if( WasKeyPressed( KEY_START ) )
     {
         if( g_bIsPaused )
@@ -341,6 +371,7 @@ static void UpdateInput()
             g_bIsPaused = TRUE;
     }
 
+    // Controlled falling
     if( WasKeyReleased( KEY_DOWN ) || !IsKeyPressed( KEY_DOWN ) )
         g_bIsFastDownAllowed = TRUE;
 
@@ -353,21 +384,46 @@ static void UpdateInput()
         else
         {
             FinishRound();
-            g_scoresCount += SCORES_DOWN;
+            g_scoresCount += SCORES_DOWN_CONTROLLED;
             return;
         }
     }
 
-    if( WasKeyPressed( KEY_B ) )
+    // Uncontrolled falling
+    if( WasKeyPressed( KEY_UP ) )
     {
-        g_thisTetrominoRotation += 3;
-        g_thisTetrominoRotation %= 4;
+        for( int i = 1; i < FIELD_SIZE_Y; ++i )
+        {
+            if( CanMoveTetromino(g_tetromino[g_thisTetrominoID][g_thisTetrominoRotation], 0, 1) )
+            {
+                ++g_posY;
+            }
+            else
+            {
+                FinishRound();
+                g_scoresCount += SCORES_DOWN_UNCONTROLLED;
+                return;
+            }
+        }
     }
 
+    // Rotation
+    int nextRotation = g_thisTetrominoRotation;
+    if( WasKeyPressed( KEY_B ) )
+        nextRotation += 3;
+
     if( WasKeyPressed( KEY_A ) )
+        nextRotation += 1;
+
+    if( nextRotation != g_thisTetrominoRotation )
     {
-        g_thisTetrominoRotation += 1;
-        g_thisTetrominoRotation %= 4;
+        nextRotation %= 4;
+        int posX = g_posX;
+        if( CanRotateTetromino(g_tetromino[g_thisTetrominoID][nextRotation], &posX, g_posY) )
+        {
+            g_posX = posX;
+            g_thisTetrominoRotation = nextRotation;
+        }
     }
 
     /*
@@ -386,7 +442,7 @@ static void UpdateInput()
     
     
         
-    
+    // Movement
     if( WasKeyPressed( KEY_RIGHT ) && CanMoveTetromino(g_tetromino[g_thisTetrominoID][g_thisTetrominoRotation], 1, 0) )
         ++g_posX;
 
