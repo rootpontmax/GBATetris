@@ -3,6 +3,7 @@
 #include "../Core/Input.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #define GAME_MODE_LIVE 0
@@ -10,35 +11,22 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #define TERMINO_COUNT 7
 #define ROTATION_COUNT 4
+////////////////////////////////////////////////////////////////////////////////////////////////////
 #define FIELD_SIZE_X 10
 #define FIELD_SIZE_Y 20
+////////////////////////////////////////////////////////////////////////////////////////////////////
 #define SCORES_FULL_LAYER 100
 #define SCORES_DOWN_CONTROLLED 50
 #define SCORES_DOWN_UNCONTROLLED 100
+////////////////////////////////////////////////////////////////////////////////////////////////////
 #define LAYERS_PER_SPEED 10
+#define DELAY_INIT_MS 800
+#define DELAY_LIMIT_MS 100
+#define DELAY_STEP_MS 50
+#define HOLD_MOVE_KEY_THRESHOLD_MS 112 // Time to recognise click from hold
+#define TIME_BETWEEN_MOVEMENT_MS 24
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 typedef uint8_t TTetromino[16];
-////////////////////////////////////////////////////////////////////////////////////////////////////
-static const int g_delayTimeArrayMS[] =
-{
-    800,
-    700,
-    600,
-    500,
-    400,
-    200,
-    100,
-    90,
-    80,    
-    70,
-    60,
-    50,
-    40,
-    30,
-    20
-};
-////////////////////////////////////////////////////////////////////////////////////////////////////
-static const int SPEED_COUNT = sizeof( g_delayTimeArrayMS ) / sizeof( g_delayTimeArrayMS[0] );
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 static const int g_tetromoniStartY[TERMINO_COUNT][ROTATION_COUNT] =
 {
@@ -106,19 +94,23 @@ static const TTetromino g_tetromino[TERMINO_COUNT][ROTATION_COUNT] =
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 static uint8_t  g_field[FIELD_SIZE_X][FIELD_SIZE_Y];
 static int      g_mode = GAME_MODE_LIVE;
-static int      g_timeMS = 0;
+static int      g_fallTimeMS = 0;
+static int      g_holdTimeMS = 0;   // Hold the move key
+static int      g_moveTimeMS = 0;   // Time between movements by holding button
 static int      g_thisTetrominoID = 0;
 static int      g_nextTetrominoID = 0;
+static int      g_prevTetrominoID = 0;
 static int      g_thisTetrominoRotation = 0;
 static int      g_nextTetrominoRotation = 0;
 static int      g_posX = 0;
 static int      g_posY = 0;
-static int      g_delayTimeMS = 1000;
+static int      g_fallDelayTimeMS;
 static int      g_layersCount = 0;
 static int      g_scoresCount = 0;
 static int      g_speedCoef = 0;
 static BOOL     g_bIsFastDownAllowed = TRUE;
 static BOOL     g_bIsPaused = FALSE;
+static BOOL     g_bHasMoveKeyHold = FALSE;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 static void ShowTetromino( const TTetromino tetromino, int posX, int posY, int idOffset )
 {
@@ -148,16 +140,25 @@ static void ShowNextTetromino()
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 static void SetupNewRound()
 {
+    g_prevTetrominoID = g_thisTetrominoID;
     g_thisTetrominoID = g_nextTetrominoID;
+
+    // This dirty hack has to prevent three-the-same-in-row case
+    do
+    {
+        g_nextTetrominoID = rand() % TERMINO_COUNT;
+    }
+    while( g_nextTetrominoID == g_thisTetrominoID && g_thisTetrominoID == g_prevTetrominoID );
+
     g_thisTetrominoRotation = g_nextTetrominoRotation;
-    g_nextTetrominoID = rand() % TERMINO_COUNT;
     g_nextTetrominoRotation = rand() % ROTATION_COUNT;
+
     g_posX = 3;
     g_posY = g_tetromoniStartY[g_thisTetrominoID][g_thisTetrominoRotation];
     g_speedCoef = g_layersCount / LAYERS_PER_SPEED;
-    if( g_speedCoef >= SPEED_COUNT )
-        g_speedCoef = SPEED_COUNT - 1;
-    g_delayTimeMS = g_delayTimeArrayMS[g_speedCoef];
+    g_fallDelayTimeMS = DELAY_INIT_MS - g_speedCoef * DELAY_STEP_MS;
+    if( g_fallDelayTimeMS < DELAY_LIMIT_MS )
+        g_fallDelayTimeMS = DELAY_LIMIT_MS;
     g_bIsFastDownAllowed = FALSE;
     ShowNextTetromino();
     ShowScores(g_scoresCount);
@@ -169,7 +170,9 @@ static void RestartGame()
 {
     CreateBackground();
     g_mode = GAME_MODE_LIVE;
-    g_timeMS = 0;
+    g_holdTimeMS = 0;
+    g_fallTimeMS = 0;
+    g_moveTimeMS = 0;
     g_layersCount = 0;
     g_scoresCount = 0;
     g_speedCoef = 0;
@@ -350,6 +353,29 @@ static void FinishRound()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+static void HandleSideMovement(const uint32_t prevState, const uint32_t thisState, const int deltaX)
+{
+    if( thisState )
+    {
+        g_bHasMoveKeyHold = TRUE;
+        if( prevState && CanMoveTetromino(g_tetromino[g_thisTetrominoID][g_thisTetrominoRotation], deltaX, 0) )
+        {
+            g_moveTimeMS = 0;
+            g_posX += deltaX;
+            return;
+        }
+
+        if( g_holdTimeMS >= HOLD_MOVE_KEY_THRESHOLD_MS &&
+            g_moveTimeMS >= TIME_BETWEEN_MOVEMENT_MS &&
+            CanMoveTetromino(g_tetromino[g_thisTetrominoID][g_thisTetrominoRotation], deltaX, 0))
+        {
+            g_moveTimeMS = 0;
+            g_posX += deltaX;
+            return;
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////
 static void UpdateInput()
 {
     PollHardwareButtons();
@@ -426,45 +452,43 @@ static void UpdateInput()
         }
     }
 
-    /*
-    if( WasKeyPressed( KEY_SELECT ) )
+    if( WasKeyReleased(KEY_RIGHT) || WasKeyReleased(KEY_LEFT) )
     {
-        g_thisTetrominoRotation = 0;
+        g_bHasMoveKeyHold = FALSE;
+        g_holdTimeMS = 0;
     }
-
-    if( WasKeyPressed( KEY_START ) )
-    {
-        ++g_thisTetrominoID;
-        g_thisTetrominoID %= TERMINO_COUNT;
-    }
-    //*/
-
-    
-    
         
-    // Movement
-    if( WasKeyPressed( KEY_RIGHT ) && CanMoveTetromino(g_tetromino[g_thisTetrominoID][g_thisTetrominoRotation], 1, 0) )
-        ++g_posX;
-
-    if( WasKeyPressed( KEY_LEFT ) && CanMoveTetromino(g_tetromino[g_thisTetrominoID][g_thisTetrominoRotation], -1, 0) )
-        --g_posX;
+    // Side movement
+    const uint32_t bWasPressedR = WasKeyPressed(KEY_RIGHT);
+    const uint32_t bWasPressedL = WasKeyPressed(KEY_LEFT);
+    const uint32_t bIsPressedR = IsKeyPressed(KEY_RIGHT);
+    const uint32_t bIsPressedL = IsKeyPressed(KEY_LEFT);
+    HandleSideMovement(bWasPressedR, bIsPressedR,  1);
+    HandleSideMovement(bWasPressedL, bIsPressedL, -1);
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-static void UpdateTimer(const int timeMS)
+static void UpdateTimer()
 {
     if( g_bIsPaused )
         return;
 
-    g_timeMS += timeMS;
+    g_fallTimeMS += FIXED_TIME_STEP_MS;
+    
+    if( g_bHasMoveKeyHold )
+    {
+        g_holdTimeMS += FIXED_TIME_STEP_MS;
+        g_moveTimeMS += FIXED_TIME_STEP_MS;
+    }
 
-    if( g_timeMS >= g_delayTimeMS )
+    // Update block falling
+    if( g_fallTimeMS >= g_fallDelayTimeMS )
     {    
         if( CanMoveTetromino(g_tetromino[g_thisTetrominoID][g_thisTetrominoRotation], 0, 1) )
             ++g_posY;
         else
             FinishRound();
 
-        g_timeMS = 0;
+        g_fallTimeMS = 0;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -473,10 +497,10 @@ static void Render()
     ShowThisTetromino(g_tetromino[g_thisTetrominoID][g_thisTetrominoRotation], g_posX, g_posY);
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-void UpdateGame(const int timeMS)
+void UpdateGameFixed()
 {
     UpdateInput();
-    UpdateTimer(timeMS);
+    UpdateTimer();
     if( GAME_MODE_LIVE == g_mode )
         Render();
 }

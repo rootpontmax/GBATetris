@@ -20,6 +20,12 @@ static uint32_t ProfilerStop()
 	return ( REG_TM3CNT_L << 16 ) | REG_TM2CNT_L;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+inline void VSync()
+{
+	while( REG_VCOUNT >= 160 );
+	while( REG_VCOUNT < 160 );
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////
 int main()
 {	
 	InitGraphics();
@@ -38,23 +44,30 @@ int main()
 	InitGame();
 	ProfilerStart();
 	int frameCount = 0;
-	uint32_t timeMS = 0;
+	uint32_t fpsTimeMS = 0;
+	uint32_t realTimeMS = 0;
+	uint32_t gameTimeMS = 0;
 	for( ; ; )
 	{
 		const uint32_t deltaTimeNS = ProfilerStop() * 60;
 		ProfilerStart();
 		const uint32_t deltaTimeMS = deltaTimeNS / 1000000;
-		timeMS += deltaTimeMS;
+		fpsTimeMS += deltaTimeMS;
+		realTimeMS += deltaTimeMS;
 
-		while( REG_VCOUNT >= 160 );
-    	while( REG_VCOUNT < 160 );
-		UpdateGame( deltaTimeMS );
+		VSync();
 
-		if( timeMS > 1000 )
+		while( gameTimeMS < realTimeMS )
+		{
+			UpdateGameFixed( FIXED_TIME_STEP_MS );
+			gameTimeMS += FIXED_TIME_STEP_MS;
+		}
+
+		if( fpsTimeMS > 1000 )
 		{
 			ShowFPS(frameCount);
 			frameCount = 0;
-			timeMS -= 1000;
+			fpsTimeMS -= 1000;
 		}
 
 		++frameCount;
